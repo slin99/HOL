@@ -70,3 +70,7 @@ see comments in pull requests [#1224](https://github.com/HOL-Theorem-Prover/HOL/
     * `finitefield/ffExist`, the classification of finite fields: existence and uniqueness.
     * `finitefield/ffExtend`, field extension by isomorphic subfield.
     * `finitefield/ffSplit`, splitting field of a field polynomial.
+
+* __elliptic__ develops short-Weierstrass curves and their Abelian group
+  law over the existing field hierarchy, with a small example over GF(5).
+  See [`elliptic/README.md`](elliptic/README.md).

@@ -33,7 +33,7 @@ AXIOMATIC_THYDIRS = set-theory/vbg set-theory/zfset geometry
 AXIOMATIC_EXAMPLES = $(patsubst %,axiomatic-developments/%,$(AXIOMATIC_THYDIRS))
 
 # example directories to build at selftest level 1
-EXDIRS = algebra/aat \
+EXDIRS = algebra/aat algebra/elliptic \
          arm/arm6-verification arm/armv8-memory-model arm/experimental \
          $(AXIOMATIC_EXAMPLES) \
 	 bnf-datatypes \
