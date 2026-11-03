@@ -172,6 +172,14 @@ New tools
 New examples
 ------------
 
+-   `examples/algebra/elliptic` develops short-Weierstrass curves over the
+    existing field records, in characteristic other than 2 or 3 with
+    nonzero discriminant. Ring identities support the associativity proof;
+    the curve points form an Abelian group using the existing group API.
+    A group-only GF(5) example has six points and a generator of order six.
+    The package is included in the algebra aggregate and level-1 selftests,
+    independently of the legacy `examples/elliptic` hierarchy.
+
 -   The algebra examples now connect fields to the HOL Light-compatible
     ring interface, with inverse laws and a homogeneous-coordinate
     denominator-clearing example checked by `ringLib.RING_TAC`.

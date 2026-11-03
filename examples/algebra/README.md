@@ -70,3 +70,12 @@ see comments in pull requests [#1224](https://github.com/HOL-Theorem-Prover/HOL/
     * `finitefield/ffExist`, the classification of finite fields: existence and uniqueness.
     * `finitefield/ffExtend`, field extension by isomorphic subfield.
     * `finitefield/ffSplit`, splitting field of a field polynomial.
+
+* __elliptic__ develops generic short-Weierstrass curves over the existing
+  field records, their Abelian groups, and a six-point example over GF(5).
+    * `elliptic/shortWeierstrass`, point constructors and curve membership.
+    * `elliptic/swAssocAlgebra`, ring identities for the associativity proof.
+    * `elliptic/shortWeierstrassGroup`, addition, inverse and group theorems.
+    * `elliptic/shortWeierstrassSmall`, a group-only GF(5) example.
+    * See the [theory map and API notes](elliptic/README.md) for hypotheses,
+      native build commands, and the distinction from `examples/elliptic`.
