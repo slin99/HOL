@@ -4,18 +4,30 @@
 (*
    Documentation
 
-   A small concrete example of the generic curve and group interfaces.
+   A small concrete example of the generic curve, group, torsion and
+   field-map interfaces. It transports the curve through the isomorphic
+   option-valued field ring_inj_image (GF 5) SOME, and changes coordinates
+   by (x,y) -> (2^2*x,2^3*y) over GF 5.
 
    Point set and group:
      sw_GF5_curve, sw_GF5_points, sw_GF5_card, sw_GF5_finite_group.
-   Scalar multiplication and point order:
-     sw_GF5_scalar_six, sw_GF5_order_divides_six, sw_GF5_generator_order.
-     The point (2,2) has order six.
+   Scalars and subgroups:
+     sw_GF5_scalar_six, sw_GF5_order_divides_six.
+     sw_GF5_generator_order, sw_GF5_generated   (2,2) generates all six points.
+     sw_GF5_cofactor_subgroups, sw_GF5_torsion_three.
+   Field transport:
+     sw_GF5_option_field, sw_GF5_option_curve, sw_GF5_option_group_iso,
+       sw_GF5_option_generator_order, sw_GF5_option_torsion_three.
+   Coordinate scaling:
+     sw_GF5_scaled_curve, sw_GF5_scale_group_iso, sw_GF5_scale_generator,
+       sw_GF5_scaled_generator_order.
+     The target is y^2 = x^3 + 4; (2,2) maps to (3,1), still of order six.
 *)
 
 Theory shortWeierstrassSmall
 Ancestors
-  shortWeierstrass shortWeierstrassGroup fieldInstances
+  shortWeierstrass shortWeierstrassGroup
+  ellipticTorsion ellipticMorphisms ellipticScaling fieldInstances fieldMap
 
 Theorem sw_GF5_elements[local]:
   !x.
@@ -188,3 +200,171 @@ Proof
   fs[sw_GF5_generator_scalars]
 QED
 
+Theorem sw_GF5_generated:
+  Generated (sw_group (GF 5) 0 1) (ECAffine 2 2) =
+  sw_group (GF 5) 0 1
+Proof
+  irule sw_cofactor_one_generated >>
+  SIMP_TAC bool_ss
+    [sw_GF5_curve, sw_GF5_points, sw_GF5_card, sw_GF5_generator_order,
+     GF_finite_field, groupTheory.PRIME_5,
+     pred_setTheory.IN_INSERT, pred_setTheory.NOT_IN_EMPTY]
+QED
+
+Theorem sw_GF5_cofactor_subgroups:
+  (sw_group (GF 5) 0 1).exp (ECAffine 2 2) 2 = ECAffine 0 4 /\
+  (sw_group (GF 5) 0 1).exp (ECAffine 2 2) 3 = ECAffine 4 0 /\
+  order (sw_group (GF 5) 0 1)
+    ((sw_group (GF 5) 0 1).exp (ECAffine 2 2) 2) = 3 /\
+  order (sw_group (GF 5) 0 1)
+    ((sw_group (GF 5) 0 1).exp (ECAffine 2 2) 3) = 2 /\
+  (sw_group (GF 5) 0 1).exp (ECAffine 2 2) 2 IN
+    (sw_torsion_group (GF 5) 0 1 3).carrier /\
+  (sw_group (GF 5) 0 1).exp (ECAffine 2 2) 3 IN
+    (sw_torsion_group (GF 5) 0 1 2).carrier
+Proof
+  rpt conj_tac >| [
+    simp[sw_GF5_generator_scalars],
+    simp[sw_GF5_generator_scalars],
+    irule sw_cofactor_clearing_order,
+    irule sw_cofactor_clearing_order,
+    irule sw_cofactor_clearing,
+    irule sw_cofactor_clearing
+  ] >>
+  SIMP_TAC bool_ss
+    [sw_GF5_curve, sw_GF5_points, sw_GF5_card, sw_GF5_generator_order,
+     GF_finite_field, groupTheory.PRIME_5,
+     pred_setTheory.IN_INSERT, pred_setTheory.NOT_IN_EMPTY] >>
+  decide_tac
+QED
+
+Theorem sw_GF5_scalar_three[local]:
+  !P. P IN sw_points (GF 5) 0 1 ==>
+    ((sw_group (GF 5) 0 1).exp P 3 = ECInfinity <=>
+     P = ECInfinity \/ P = ECAffine 0 1 \/ P = ECAffine 0 4)
+Proof
+  SIMP_TAC bool_ss [sw_GF5_points, pred_setTheory.IN_INSERT,
+                   pred_setTheory.NOT_IN_EMPTY] >>
+  rw[] >>
+  simp[monoidTheory.monoid_exp_def,
+       EVAL ``FUNPOW (f:'a->'a) 3 x``,
+       EVAL ``FUNPOW (f:'a->'a) 2 x``,
+       sw_group_id, sw_group_op, sw_add_def, sw_slope_def,
+       sw_add_x_def, sw_add_y_def, sw_GF5_prod_inv_table,
+       GF_eval, GF_sum_inv] >>
+  EVAL_TAC
+QED
+
+Theorem sw_GF5_torsion_three:
+  (sw_torsion_group (GF 5) 0 1 3).carrier =
+  {ECInfinity; ECAffine 0 1; ECAffine 0 4}
+Proof
+  SIMP_TAC bool_ss [pred_setTheory.EXTENSION, sw_torsion_member] >>
+  metis_tac[sw_GF5_scalar_three, sw_GF5_points,
+            pred_setTheory.IN_INSERT, pred_setTheory.NOT_IN_EMPTY]
+QED
+
+Theorem sw_GF5_option_field:
+  FiniteField (ring_inj_image (GF 5) SOME) /\
+  FieldIso SOME (GF 5) (ring_inj_image (GF 5) SOME)
+Proof
+  `INJ (SOME:num->num option) (GF 5).carrier UNIV` by
+    rw[pred_setTheory.INJ_DEF] >>
+  `FiniteField (GF 5)` by
+    simp[GF_finite_field, groupTheory.PRIME_5] >>
+  conj_tac >- metis_tac[field_inj_image_finite_field] >>
+  rw[FieldIso_def] >-
+    metis_tac[field_inj_image_field_homo, fieldTheory.FiniteField_def] >>
+  rw[ringTheory.ring_inj_image_carrier, pred_setTheory.BIJ_DEF,
+     pred_setTheory.INJ_DEF, pred_setTheory.SURJ_DEF,
+     pred_setTheory.IN_IMAGE] >>
+  metis_tac[]
+QED
+
+Theorem sw_GF5_option_curve:
+  ShortWeierstrassCurve
+    (ring_inj_image (GF 5) SOME) (SOME 0) (SOME 1)
+Proof
+  metis_tac[sw_field_iso_curve, sw_GF5_curve, sw_GF5_option_field,
+            fieldTheory.FiniteField_def]
+QED
+
+Theorem sw_GF5_option_group_iso:
+  GroupIso (sw_map_point SOME) (sw_group (GF 5) 0 1)
+    (sw_group (ring_inj_image (GF 5) SOME) (SOME 0) (SOME 1))
+Proof
+  metis_tac[sw_field_iso_group, sw_GF5_curve, sw_GF5_option_field,
+            fieldTheory.FiniteField_def]
+QED
+
+Theorem sw_GF5_option_generator_order:
+  order (sw_group (ring_inj_image (GF 5) SOME) (SOME 0) (SOME 1))
+    (ECAffine (SOME 2) (SOME 2)) = 6
+Proof
+  `ECAffine 2 2 IN sw_points (GF 5) 0 1` by
+    SIMP_TAC bool_ss [sw_GF5_points, pred_setTheory.IN_INSERT,
+                     pred_setTheory.NOT_IN_EMPTY] >>
+  `order (sw_group (ring_inj_image (GF 5) SOME) (SOME 0) (SOME 1))
+     (sw_map_point SOME (ECAffine 2 2)) = 6` by
+    metis_tac[sw_curve_iso_order, sw_GF5_curve, sw_GF5_option_curve,
+              sw_GF5_option_group_iso, sw_GF5_generator_order] >>
+  fs[sw_map_point_def]
+QED
+
+Theorem sw_GF5_option_torsion_three:
+  (sw_torsion_group
+    (ring_inj_image (GF 5) SOME) (SOME 0) (SOME 1) 3).carrier =
+  {ECInfinity; ECAffine (SOME 0) (SOME 1); ECAffine (SOME 0) (SOME 4)}
+Proof
+  `GroupIso (sw_map_point SOME)
+     (sw_torsion_group (GF 5) 0 1 3)
+     (sw_torsion_group
+       (ring_inj_image (GF 5) SOME) (SOME 0) (SOME 1) 3)` by
+    metis_tac[sw_field_iso_torsion, sw_GF5_curve, sw_GF5_option_field,
+              fieldTheory.FiniteField_def] >>
+  `(sw_torsion_group
+      (ring_inj_image (GF 5) SOME) (SOME 0) (SOME 1) 3).carrier =
+   IMAGE (sw_map_point SOME) (sw_torsion_group (GF 5) 0 1 3).carrier` by
+    metis_tac[groupTheory.group_iso_bij, pred_setTheory.BIJ_IMAGE] >>
+  simp[sw_GF5_torsion_three, sw_map_point_def]
+QED
+
+(* With u = 2 the coefficients (0,1) become (0,4), not (0,1). *)
+Theorem sw_GF5_scale_parameters[local]:
+  2 IN (GF 5).carrier /\ 2 <> (GF 5).sum.id /\
+  (GF 5).prod.op ((GF 5).prod.exp 2 4) 0 = 0 /\
+  (GF 5).prod.op ((GF 5).prod.exp 2 6) 1 = 4
+Proof
+  rw[GF_element, GF_eval, monoidTheory.monoid_exp_def] >>
+  EVAL_TAC
+QED
+
+Theorem sw_GF5_scaled_curve:
+  ShortWeierstrassCurve (GF 5) 0 4
+Proof
+  metis_tac[sw_scale_curve, sw_GF5_curve, sw_GF5_scale_parameters]
+QED
+
+Theorem sw_GF5_scale_group_iso:
+  GroupIso (sw_scale_point (GF 5) 2)
+    (sw_group (GF 5) 0 1) (sw_group (GF 5) 0 4)
+Proof
+  metis_tac[sw_scale_group_iso, sw_GF5_curve, sw_GF5_scale_parameters]
+QED
+
+Theorem sw_GF5_scale_generator:
+  sw_scale_point (GF 5) 2 (ECAffine 2 2) = ECAffine 3 1
+Proof
+  rw[sw_scale_point_def, GF_eval, monoidTheory.monoid_exp_def] >>
+  EVAL_TAC
+QED
+
+Theorem sw_GF5_scaled_generator_order:
+  order (sw_group (GF 5) 0 4) (ECAffine 3 1) = 6
+Proof
+  `ECAffine 2 2 IN sw_points (GF 5) 0 1` by
+    SIMP_TAC bool_ss [sw_GF5_points, pred_setTheory.IN_INSERT,
+                     pred_setTheory.NOT_IN_EMPTY] >>
+  metis_tac[sw_scale_order, sw_GF5_curve, sw_GF5_scale_parameters,
+            sw_GF5_scale_generator, sw_GF5_generator_order]
+QED
