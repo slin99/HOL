@@ -73,7 +73,9 @@ see comments in pull requests [#1224](https://github.com/HOL-Theorem-Prover/HOL/
 
 * __elliptic__ develops generic short-Weierstrass curves over the existing
   field records, their Abelian groups, rational torsion, field-induced
-  morphisms and invertible affine coordinate scaling, with GF(5) examples.
+  morphisms, invertible affine coordinate scaling, homogeneous
+  coordinates, elementary cardinality and exact-order certificates,
+  and cube-root endomorphisms, with GF(5) examples.
     * `elliptic/shortWeierstrass`, point constructors and curve membership.
     * `elliptic/swAssocAlgebra`, ring identities for the associativity proof.
     * `elliptic/shortWeierstrassGroup`, addition, inverse and group theorems.
@@ -82,7 +84,16 @@ see comments in pull requests [#1224](https://github.com/HOL-Theorem-Prover/HOL/
     * `elliptic/ellipticMorphisms`, field-induced group and torsion maps.
     * `elliptic/ellipticScaling`, scaling `(x,y)` to `(u^2*x,u^3*y)` with
       target coefficients `(u^4*a,u^6*b)` for nonzero field element `u`.
+    * `elliptic/shortWeierstrassProjective`, ordinary homogeneous
+      coordinates, nonzero scaling classes and curve representatives.
+    * `elliptic/ellipticCardinality`, the elementary `2*CARD field+1`
+      bound (not Hasse), odd-cardinality criteria and exact-order tests.
+    * `elliptic/ellipticCMMap`, the automorphism `(x,y)` to `(beta*x,y)`
+      on curves with `a = 0` and a carrier element satisfying `beta^3 = 1`.
+    * `elliptic/ellipticCMCertificates`, generic finite-group independence
+      and cardinality bounds from order-three endomorphisms.
     * `elliptic/shortWeierstrassSmall`, a six-point GF(5) group, its
-      3-torsion and generated group, option-field transport and scaling.
+      3-torsion and generated group, option-field transport, scaling
+      and homogeneous-coordinate representatives and nonrepresentatives.
     * See the [theory map and API notes](elliptic/README.md) for hypotheses,
       native build commands, and the distinction from `examples/elliptic`.

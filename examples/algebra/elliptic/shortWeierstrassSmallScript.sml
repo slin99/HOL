@@ -22,12 +22,18 @@
      sw_GF5_scaled_curve, sw_GF5_scale_group_iso, sw_GF5_scale_generator,
        sw_GF5_scaled_generator_order.
      The target is y^2 = x^3 + 4; (2,2) maps to (3,1), still of order six.
+   Projective coordinates:
+     sw_GF5_projective_affine, sw_GF5_projective_infinity,
+       sw_GF5_projective_nonrepresentatives, sw_GF5_projective_classes.
+     (4,4,2) represents (2,2), (0,3,0) represents infinity, and the zero
+     triple and off-curve infinity triples are rejected.
 *)
 
 Theory shortWeierstrassSmall
 Ancestors
   shortWeierstrass shortWeierstrassGroup
   ellipticTorsion ellipticMorphisms ellipticScaling fieldInstances fieldMap
+  shortWeierstrassProjective
 
 Theorem sw_GF5_elements[local]:
   !x.
@@ -367,4 +373,51 @@ Proof
                      pred_setTheory.NOT_IN_EMPTY] >>
   metis_tac[sw_scale_order, sw_GF5_curve, sw_GF5_scale_parameters,
             sw_GF5_scale_generator, sw_GF5_generator_order]
+QED
+
+Theorem sw_GF5_projective_affine:
+  sw_projective_rep (GF 5) 0 1 (4,4,2) (ECAffine 2 2)
+Proof
+  qsuff_tac
+    `sw_projective_rep (GF 5) 0 1
+       (sw_projective_scale (GF 5) 2
+         (sw_point_to_projective (GF 5) (ECAffine 2 2)))
+       (ECAffine 2 2)`
+  >- simp[sw_projective_scale_def, sw_point_to_projective_def, GF_eval] >>
+  MATCH_MP_TAC sw_projective_rep_scale >>
+  simp[GF_field, groupTheory.PRIME_5, GF_eval] >>
+  MATCH_MP_TAC sw_point_to_projective_rep >>
+  SIMP_TAC bool_ss [GF_field, groupTheory.PRIME_5, sw_GF5_points,
+                   pred_setTheory.IN_INSERT, pred_setTheory.NOT_IN_EMPTY]
+QED
+
+Theorem sw_GF5_projective_infinity:
+  sw_projective_rep (GF 5) 0 1 (0,3,0) ECInfinity
+Proof
+  simp[sw_projective_rep_def, sw_projective_valid_def,
+       sw_projective_to_point_def, GF_eval]
+QED
+
+Theorem sw_GF5_projective_nonrepresentatives:
+  ~sw_projective_valid (GF 5) (0,0,0) /\
+  ~sw_projective_rep (GF 5) 0 1 (1,1,0) ECInfinity
+Proof
+  simp[sw_projective_valid_def, sw_projective_rep_def, GF_eval]
+QED
+
+Theorem sw_GF5_projective_classes:
+  sw_projective_equiv (GF 5) (2,2,1) (4,4,2) /\
+  ~sw_projective_equiv (GF 5) (4,4,2) (0,3,0)
+Proof
+  `Field (GF 5)` by simp[GF_field, groupTheory.PRIME_5] >>
+  `sw_projective_rep (GF 5) 0 1 (2,2,1) (ECAffine 2 2)` by
+    (qsuff_tac
+       `sw_projective_rep (GF 5) 0 1
+          (sw_point_to_projective (GF 5) (ECAffine 2 2)) (ECAffine 2 2)`
+     >- simp[sw_point_to_projective_def, GF_eval] >>
+     MATCH_MP_TAC sw_point_to_projective_rep >>
+     SIMP_TAC bool_ss [GF_field, groupTheory.PRIME_5, sw_GF5_points,
+                      pred_setTheory.IN_INSERT, pred_setTheory.NOT_IN_EMPTY]) >>
+  metis_tac[sw_projective_reps_equiv, sw_GF5_projective_affine,
+            sw_GF5_projective_infinity, sw_point_distinct]
 QED

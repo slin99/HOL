@@ -21,12 +21,25 @@ hierarchy. It does not introduce a new field or group hierarchy.
   and isomorphisms, preserving group operations, scalars and torsion.
 * `ellipticScaling`: invertible coordinate scaling between curves, with
   group, scalar, point-order and torsion transport.
+* `shortWeierstrassProjective`: ordinary homogeneous triples, nonzero
+  scaling equivalence, curve representatives, chart equations and
+  round trips to affine points and infinity.
+* `ellipticCardinality`: the elementary bound of two points per
+  x-coordinate, odd-cardinality criteria, cardinality identification
+  from a sufficiently large odd divisor, and exact-order certificates.
+* `ellipticCMMap`: the cube-root coordinate automorphism on curves with
+  `a = 0`, preserving addition and scalar multiplication.
+* `ellipticCMCertificates`: companion finite-group facts about
+  order-three endomorphisms, cubic eigenvalues and independent
+  generators; the resulting product cardinality gives an ambient
+  group-cardinality lower bound.
 * `shortWeierstrassSmall`: the example `y^2 = x^3 + 1` over `GF 5`.
   Its carrier has cardinality six and `ECAffine 2 2` has order six.
   The examples identify its rational 3-torsion and generated six-point
   group, transport points to an option field, and scale by `u = 2` to
-  `y^2 = x^3 + 4`, preserving generator order six. They use existing
-  primality facts, not new primality APIs.
+  `y^2 = x^3 + 4`, preserving generator order six. Homogeneous examples
+  identify scaled affine and infinity representatives and reject invalid
+  triples. They use existing primality facts, not new primality APIs.
 
 ## API semantics
 
@@ -88,6 +101,49 @@ This changes affine coordinates and curve coefficients; it is not
 homogeneous-coordinate scaling. These group and transport results retain
 the stated curve, field and point-membership hypotheses.
 
+`sw_projective_valid r (X,Y,Z)` requires carrier coordinates and excludes
+the zero triple. These are ordinary homogeneous coordinates, with affine
+coordinates `(X/Z,Y/Z)`, not Jacobian coordinates. Validity alone does not
+assert the curve equation. `sw_projective_on_curve` adds
+`Y^2*Z = X^3 + a*X*Z^2 + b*Z^3`. Under the stated field and coefficient
+conditions, `sw_projective_rep` relates precisely these representatives
+to their decoded curve points, and `sw_projective_equiv` identifies
+common nonzero scalings. Infinity representatives have `X = Z = 0` and
+`Y <> 0`. The total decoder maps every triple with `Z = 0` to infinity,
+including invalid triples, so decoding is not a validity test.
+`sw_projective_equiv_iff_to_point` retains the infinity guards needed
+to characterize equivalence by equality of decoding.
+
+`sw_points_card_bound` proves `CARD (sw_points r a b) <= 2*CARD r.carrier+1`
+for a finite field and a short-Weierstrass curve. It is not Hasse's bound.
+The absence of nonidentity rational 2-torsion makes the cardinality odd;
+a root-free cubic is a sufficient test for that absence.
+`sw_cardinality_from_odd_divisor` then identifies the full cardinality
+as a positive odd divisor `N` when `2*CARD r.carrier+1 < 3*N`. Companion
+results obtain the divisor from a subgroup or point order.
+`sw_exact_order_certificate` proves order `N > 0` from `[N]P = O` and
+`[N/q]P <> O` for every prime divisor `q` of `N`. An annihilation equation
+alone does not establish exact order.
+
+`sw_cm_map r beta` fixes infinity and sends `(x,y)` to `(beta*x,y)`.
+For a short-Weierstrass curve with `a = 0`, a carrier element `beta` with
+`beta^3 = 1` induces a group automorphism whose third iterate is identity;
+`beta = 1` is allowed. No primitive-root or concrete eigenvalue claim
+is implicit. `sw_cm_map_scalar` states compatibility with the existing
+group exponent.
+
+The independent companion theory `ellipticCMCertificates` uses the
+existing `GroupEndo`, `Generated`, `order`, `independent` and
+`subgroup_cross` APIs, without introducing another group hierarchy.
+`cm_independent` starts with a point `P` of exact positive order `M`,
+a positive divisor `d` of `M`, and an endomorphism `f` whose third iterate
+is identity. For `Q = g.exp (f P) (M DIV d)`, it proves independence
+provided the stated cubic eigenvalues are excluded on each prime-order
+line for primes dividing `d`. The subgroup-product carrier then has size
+`M*d`, giving `M*d <= CARD g.carrier`. This does not require `d` and
+`M DIV d` to be coprime. These are generic hypotheses, not certificates
+for a particular curve or named field.
+
 ## Native builds
 
 With HOL configured and built, run from the repository root:
@@ -114,6 +170,6 @@ with its own legacy field/group hierarchy and tooling. This package does
 not import or modify that hierarchy; its field and group records come
 from the current algebra libraries.
 
-This package contains no projective-coordinate or complex-multiplication
-development, cardinality certificates or concrete cryptographic instances.
-The GF(5) examples illustrate the generic group and transport interfaces.
+No concrete cryptographic instances, project-specific named fields or
+arithmetic certificate libraries are included. The GF(5) examples
+illustrate the generic group, transport and projective interfaces.

@@ -197,6 +197,25 @@ New examples
     group, option-field transport and scaling by 2 to `y^2 = x^3 + 4`
     with generator order six.
 
+-   `examples/algebra/elliptic` also includes ordinary homogeneous
+    coordinates in `shortWeierstrassProjective`, with nonzero scaling
+    equivalence, valid curve representatives and affine/infinity chart
+    theorems. The decoder is total and is not a validity test.
+    `ellipticCardinality` supplies the elementary `2*CARD field+1` bound
+    (not Hasse's theorem), odd-cardinality and exact-order certificates.
+    `ellipticCMMap` proves that `(x,y) |-> (beta*x,y)` is a group
+    automorphism on curves with `a = 0` when `beta` is a carrier element
+    with `beta^3 = 1`; this includes the identity cube root.
+    The companion `ellipticCMCertificates` proves finite-group
+    independence and cardinality lower bounds from order-three
+    endomorphisms and explicit prime-order eigenvalue exclusions, without
+    requiring coprime order and cofactor. All field, carrier, nonzero and
+    exact-order hypotheses remain explicit. GF(5) examples demonstrate
+    scaled affine representatives, infinity and rejected triples.
+    These theories share the existing native level-1 package registration
+    and do not depend on named cryptographic fields or arithmetic
+    certificate libraries.
+
 -   The algebra examples now connect fields to the HOL Light-compatible
     ring interface, with inverse laws and a homogeneous-coordinate
     denominator-clearing example checked by `ringLib.RING_TAC`.
