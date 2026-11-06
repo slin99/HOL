@@ -187,4 +187,3 @@ Proof
   pop_assum strip_assume_tac >>
   fs[sw_GF5_generator_scalars]
 QED
-

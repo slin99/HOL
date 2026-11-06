@@ -21,8 +21,6 @@
                       FiniteField additionally gives FiniteAbelianGroup.
      sw_group_carrier, sw_group_id, sw_group_op, sw_group_inv
                       Connect record operations to the curve interface.
-     sw_ring_ops, sw_field_prod_inv, sw_field_prod_inv_eq
-                      Bridges used by coordinate and certificate proofs.
 
    Definitions are total; group laws and inverse facts require the curve and
    point-membership hypotheses in their statements. Scalar multiplication
@@ -39,13 +37,7 @@ Libs
 
 open fieldTheory ringTheory ringLibTheory
 
-Theorem sw_ring_model[local]:
-  Field (r:'a field) ==> fromRing (toRing r) = r
-Proof
-  rw[from_toRing, field_is_ring]
-QED
-
-Theorem sw_ring_ops:
+Theorem sw_ring_ops[local]:
   Field (r:'a field) ==>
   (ring_carrier (toRing r) = r.carrier) /\
   (ring_0 (toRing r) = r.sum.id) /\
@@ -56,9 +48,8 @@ Theorem sw_ring_ops:
   (!x n. ring_pow (toRing r) x n = r.prod.exp x n) /\
   (!n. ring_of_num (toRing r) n = r.sum.exp r.prod.id n)
 Proof
-  rw[ring_carrier_def, ring_0_def, ring_1_def, ring_neg_def,
-     ring_add_def, ring_mul_def, ring_pow_def,
-     ring_of_num_def, sw_ring_model]
+  rw[toRing_operations, field_is_ring, ring_neg_def, ring_of_num_def,
+     from_toRing]
 QED
 
 Theorem sw_toRing_carrier[local]:
@@ -114,7 +105,7 @@ Proof
   metis_tac[sw_ring_ops]
 QED
 
-Theorem sw_field_prod_inv:
+Theorem sw_field_prod_inv[local]:
   !(r:'a field) d.
   Field r /\ d IN r.carrier /\ d <> r.sum.id ==>
   r.prod.inv d IN r.carrier /\
@@ -1790,4 +1781,3 @@ Proof
   rw[groupTheory.FiniteAbelianGroup_def,
      short_weierstrass_abelian_group, sw_group_def, sw_points_finite]
 QED
-
