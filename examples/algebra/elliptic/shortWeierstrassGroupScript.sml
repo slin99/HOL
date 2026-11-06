@@ -779,7 +779,8 @@ Proof
      `add z (add x y) = add (add x y) z` by metis_tac[] >>
      ntac 5 (qpat_x_assum `!x. _` kall_tac) >>
      metis_tac[]) >>
-  first_x_assum
+  qpat_x_assum
+    `!x y z. P x /\ P y /\ P z /\ ~eq x y /\ _ ==> _`
     (qspecl_then [`x`, `y`, `z`] match_mp_tac) >>
   ASM_REWRITE_TAC []
 QED
@@ -1790,4 +1791,3 @@ Proof
   rw[groupTheory.FiniteAbelianGroup_def,
      short_weierstrass_abelian_group, sw_group_def, sw_points_finite]
 QED
-

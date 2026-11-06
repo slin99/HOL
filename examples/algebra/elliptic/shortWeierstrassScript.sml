@@ -88,4 +88,3 @@ Theorem sw_points_member[simp]:
 Proof
   rw[sw_points_def]
 QED
-

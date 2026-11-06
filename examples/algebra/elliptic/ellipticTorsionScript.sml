@@ -312,4 +312,3 @@ Proof
   metis_tac[group_order_exp_cofactor, short_weierstrass_group,
             sw_group_carrier]
 QED
-

@@ -395,4 +395,3 @@ Theorem sw_scale_torsion:
 Proof
   metis_tac[sw_curve_iso_torsion, sw_scale_curve, sw_scale_group_iso]
 QED
-

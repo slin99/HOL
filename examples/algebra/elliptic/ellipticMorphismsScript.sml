@@ -459,4 +459,3 @@ Proof
   strip_tac >> irule sw_curve_iso_torsion >>
   metis_tac[sw_field_iso_curve, sw_field_iso_group]
 QED
-

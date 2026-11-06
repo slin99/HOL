@@ -264,4 +264,3 @@ Proof
      `ux`, `uy`, `vx`, `vy`, `k`, `l`] sw_assoc_outputs_algebra))) >>
   ASM_SIMP_TAC bool_ss [listTheory.EVERY_DEF]
 QED
-
