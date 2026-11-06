@@ -105,3 +105,11 @@ see comments in pull requests [#1224](https://github.com/HOL-Theorem-Prover/HOL/
       checked irreducibility certificates and explicit field embeddings.
     * See [the package README](field_certificates/README.md) for representations,
       conversion interfaces, trust boundaries and native Holmake commands.
+
+* __elliptic/instances__ specializes the generic curves to secp256k1,
+  P-256, BN254 and BLS12-381, including G2 twists, full cardinalities,
+  cofactors and degree-twelve embeddings.
+    * Scalar and field-operation certificates are checked by
+      `elliptic/certificates`; numerical witnesses are not trusted proofs.
+    * The complete [instance package](elliptic/instances/README.md) is
+      built separately and selected at selftest level 3.

@@ -170,6 +170,9 @@ with its own legacy field/group hierarchy and tooling. This package does
 not import or modify that hierarchy; its field and group records come
 from the current algebra libraries.
 
-No concrete cryptographic instances, project-specific named fields or
-arithmetic certificate libraries are included. The GF(5) examples
-illustrate the generic group, transport and projective interfaces.
+The generic theories do not depend on concrete cryptographic instances or
+arithmetic certificate libraries. The GF(5) examples illustrate the generic
+group, transport and projective interfaces. The separately built
+[instance package](instances/README.md) combines these theories with the
+[field/certificate package](../field_certificates/README.md); its long
+full-cardinality proofs are selected at selftest level 3.

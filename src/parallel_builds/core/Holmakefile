@@ -131,6 +131,9 @@ EX3DIRS = arm/ARM_security_properties \
 
 ifdef POLY
 EX3DIRS += machine-code theorem-prover
+ifneq ($(KERNELID),otknl)
+EX3DIRS += algebra/elliptic/instances
+endif
 endif
 
 INCLUDES += $(patsubst %,../../../examples/%,$(EX3DIRS))
