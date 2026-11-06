@@ -3,7 +3,11 @@ INCLUDES = ../field ../finitefield ../polynomial ../linear ../ring \
            $(HOLDIR)/src/num/extra_theories \
            $(HOLDIR)/src/num/theories/cv_compute/automation
 
+ifeq ($(HOLSELFTESTLEVEL),1)
+all: namedPrimeFieldsTheory.uo pairingQuadraticFieldsTheory.uo selftest.exe
+else
 all: $(DEFAULT_TARGETS) selftest.exe
+endif
 .PHONY: all
 
 selftest.exe: selftest.uo polynomialCertificateLib.uo pairingFieldCertificateLib.uo

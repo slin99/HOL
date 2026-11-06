@@ -92,9 +92,13 @@ certificates, and compiles the small converter-contract selftest. The selftest
 checks exact input equalities and absence of hypotheses, arithmetic edge
 cases, checked small-field computations, and rejection of malformed or
 hypothetical certificate contexts. Alternatively, `Holmake` from
-`examples/algebra` selects the package through the native aggregate. Standard
-Poly/ML PR selftest builds select it directly at selftest level 1 and above;
-`HOLSELFTESTLEVEL` also enables execution of its regression target.
+`examples/algebra` selects the package through the native aggregate.
+
+Poly/ML PR selftest builds select the package directly at level 1. That level
+builds named and quadratic fields and runs the converter tests, without the
+degree-twelve irreducibility proofs, which can each take several minutes.
+Normal builds and selftest levels 2 and above build the complete package.
+`HOLSELFTESTLEVEL` also enables execution of the regression target.
 
 All algebra prerequisite includes are relative to this package, so a worktree
 build uses that worktree's mathematical sources even when `HOLDIR` points at
