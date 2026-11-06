@@ -70,3 +70,12 @@ see comments in pull requests [#1224](https://github.com/HOL-Theorem-Prover/HOL/
     * `finitefield/ffExist`, the classification of finite fields: existence and uniqueness.
     * `finitefield/ffExtend`, field extension by isomorphic subfield.
     * `finitefield/ffSplit`, splitting field of a field polynomial.
+
+* __field_certificates__ is a standalone numeric-field and polynomial
+  certificate package, independent of elliptic-curve theories.
+    * `namedPrimeFields` reuses the constants and primality proofs from
+      `primality/examples/namedPrimes` for secp256k1, P-256, BN254 and BLS12-381.
+    * BN254 and BLS12-381 quadratic and degree-twelve quotient fields have
+      checked irreducibility certificates and explicit field embeddings.
+    * See [the package README](field_certificates/README.md) for representations,
+      conversion interfaces, trust boundaries and native Holmake commands.

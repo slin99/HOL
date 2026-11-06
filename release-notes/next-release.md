@@ -181,6 +181,15 @@ New examples
     translations, with examples for elliptic-curve primes. Decimal certificate
     keys are normalized before lookup, including keys with leading zeros.
 
+-   `examples/algebra/field_certificates` provides named base/scalar fields
+    for secp256k1, P-256, BN254 and BLS12-381, reusing `namedPrimes`, and
+    BN254/BLS12-381 quadratic and degree-twelve polynomial quotient fields
+    with explicit injective field embeddings. Polynomial remainder, modular
+    power, Rabin irreducibility and no-roots certificates are kernel checked;
+    natural modular powers use shared `expMod`/`cv_std` automation.
+    The standalone Poly/ML package has no elliptic-curve dependency and is
+    selected by the native algebra aggregate and standard PR selftest builds.
+
 -   The LaTeX munging technology has a tutorial document in the `examples/latex-generation` directory.
 
 -  `examples/lambda/barendregt`: new theories (`solvable`, `boehm`, `lameta_complete`, `separability`, etc.) containing a formalisation of Böhm trees, Böhm's separation theorem for untyped λ-calculus, completeness of λη-equational theory, Wadsworth's theorem (solvable iff has hnf), Takahashi's modern proofs about η-reduction, etc.
